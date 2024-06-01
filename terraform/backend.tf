@@ -1,6 +1,6 @@
 terraform {
  backend "gcs" {
-   bucket  = "thekubekloud"
+   bucket  = "gke-deployment"
    prefix  = "terraform/state"
  }
 }
