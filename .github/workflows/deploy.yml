@@ -113,11 +113,6 @@ jobs:
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
