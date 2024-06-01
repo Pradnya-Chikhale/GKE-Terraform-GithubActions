@@ -14,17 +14,18 @@ resource "google_container_cluster" "primary" {
     ]
   }
 
-  initial_node_count = 1
+  initial_node_count = 3
 }
 
 resource "google_container_node_pool" "primary_nodes" {
   cluster    = google_container_cluster.primary.name
   location   = google_container_cluster.primary.location
-  node_count = 1
+  node_count = 3
 
   node_config {
     preemptible  = true
     machine_type = "e2-medium"
+    disk_size_gb = "10"
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
