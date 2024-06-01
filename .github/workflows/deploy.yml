@@ -131,13 +131,9 @@ jobs:
 
     - name: Set environment variables and authenticate with GKE
       run: |
+        
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-        gcloud container clusters get-credentials $CLUSTER --region $REGION --project $PROJECT --internal-ip
-      env:
-        USE_GKE_GCLOUD_AUTH_PLUGIN: True
-        CLUSTER: my-gke-cluster
-        REGION: us-central1
-        PROJECT: reliable-sight-425106-c5
+        gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project eliable-sight-425106-c5
 
     - name: Get GKE credentials
       run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
