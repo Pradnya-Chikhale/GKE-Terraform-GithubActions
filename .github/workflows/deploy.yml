@@ -22,14 +22,14 @@ jobs:
     - name: Setup gcloud CLI
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
-        project_id: ${{ secrets.GCP_PROJECT }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
 
     - name: Create GCS Bucket
       run: |
         echo 'Creating GCS bucket...'
-        echo 'gsutil mb -p ${{ secrets.GCP_PROJECT }} -c standard -l us-central1 gs://${{ secrets.GCS_BUCKET_NAME }}'
-        gsutil mb -p ${{ secrets.GCP_PROJECT }} -c standard -l us-central1 gs://${{ secrets.GCS_BUCKET_NAME }}
+        echo 'gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -c standard -l us-central1 gs://${{ secrets.GCS_BUCKET_NAME }}'
+        gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -c standard -l us-central1 gs://${{ secrets.GCS_BUCKET_NAME }}
 
     - name: Set Bucket Permissions
       run: |
@@ -59,7 +59,7 @@ jobs:
     - name: Setup gcloud CLI
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
-        project_id: ${{ secrets.GCP_PROJECT }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
 
     - name: Initialize Terraform
@@ -92,7 +92,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app
+        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-python-app
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
@@ -113,7 +113,7 @@ jobs:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - name: Get GKE credentials
-      run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
+      run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT_ID }}
 
     - name: Deploy to GKE
       run: |
