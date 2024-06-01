@@ -137,11 +137,4 @@ jobs:
       env:
            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
       run: |
-        
-        sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin
-        echo 'export USE_GKE_GCLOUD_AUTH_PLUGIN=True' >> ~/.bashrc
-        source ~/.bashrc
-        sudo apt-get update && sudo apt-get --only-upgrade install google-cloud-cli-log-streaming google-cloud-cli-nomos google-cloud-cli-enterprise-certificate-proxy google-cloud-cli-app-engine-grpc google-cloud-cli google-cloud-cli-docker-credential-gcr kubectl google-cloud-cli-pubsub-emulator google-cloud-cli-cbt google-cloud-cli-local-extract google-cloud-cli-app-engine-go google-cloud-cli-kubectl-oidc google-cloud-cli-anthos-auth google-cloud-cli-config-connector google-cloud-cli-spanner-migration-tool google-cloud-cli-cloud-build-local google-cloud-cli-firestore-emulator google-cloud-cli-app-engine-python-extras google-cloud-cli-terraform-tools google-cloud-cli-minikube google-cloud-cli-istioctl google-cloud-cli-datastore-emulator google-cloud-cli-bigtable-emulator google-cloud-cli-gke-gcloud-auth-plugin google-cloud-cli-kpt google-cloud-cli-app-engine-python google-cloud-cli-spanner-emulator google-cloud-cli-cloud-run-proxy google-cloud-cli-package-go-module google-cloud-cli-harbourbridge google-cloud-cli-skaffold google-cloud-cli-anthoscli google-cloud-cli-app-engine-java
-        cp ~/.kube/config ~/.kube/config.backup && rm ~/.kube/config
-        gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
         kubectl apply -f k8s-deployment.yml      
