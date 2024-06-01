@@ -30,3 +30,23 @@ resource "google_container_node_pool" "primary_nodes" {
     ]
   }
 }
+
+
+resource "google_storage_bucket" "terraform_state" {
+  name                        = var.bucket_name
+  location                    = var.region
+  force_destroy               = true
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_member" "storage_admin" {
+  bucket = google_storage_bucket.terraform_state.name
+  role   = "roles/storage.admin"
+  member = "serviceAccount:${var.service_account_email}"
+}
+
+resource "google_storage_bucket_iam_member" "object_viewer" {
+  bucket = google_storage_bucket.terraform_state.name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${var.service_account_email}"
+}

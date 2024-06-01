@@ -1,5 +1,5 @@
 variable "project_id" {
-  description = "reliable-sight-425106-c5"
+  description = "The ID of the project "
 }
 
 variable "region" {
@@ -10,4 +10,14 @@ variable "region" {
 variable "cluster_name" {
   description = "The name of the Kubernetes cluster"
   default     = "my-gke-cluster"
+}
+
+variable "bucket_name" {
+  description = "The name of the bucket to create."
+  type        = string
+}
+
+variable "service_account_email" {
+  description = "The email of the service account to grant permissions to."
+  type        = string
 }
