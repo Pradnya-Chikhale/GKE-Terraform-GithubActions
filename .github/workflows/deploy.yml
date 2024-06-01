@@ -144,4 +144,4 @@ jobs:
         gcloud components update
         cp ~/.kube/config ~/.kube/config.backup && rm ~/.kube/config
         gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
-                
+        kubectl apply -f k8s-deployment.yml      
