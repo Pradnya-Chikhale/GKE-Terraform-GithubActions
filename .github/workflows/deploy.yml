@@ -133,7 +133,7 @@ jobs:
       run: |
         
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-        gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project eliable-sight-425106-c5
+        gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project reliable-sight-425106-c5
 
     - name: Get GKE credentials
       run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
