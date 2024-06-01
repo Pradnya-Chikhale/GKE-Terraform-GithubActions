@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: python-app
-        image: gcr.io/reliable-sight-425106-c5/my-python-app:latest
+        image: gcr.io/GCP_PROJECT/my-python-app:latest
         ports:
         - containerPort: 80
 

@@ -139,7 +139,9 @@ jobs:
       run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
 
     - name: Deploy to GKE
+      env:
+           GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
       run: |
-        gcloud config set compute/region us-central1
-        gcloud container clusters get-credentials my-gke-cluster
+        gcloud container clusters get-credentials my-gke-cluster --region us-central1
+        sed -i "s/GCP_PROJECT/$GCP_PROJECT/g" k8s-deployment.yml
         kubectl apply -f k8s-deployment.yml
