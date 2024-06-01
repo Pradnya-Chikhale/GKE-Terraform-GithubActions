@@ -138,9 +138,8 @@ jobs:
            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
       run: |
         
-        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=False" >> ~/.bashrc
         source ~/.bashrc
-        gcloud components update
         gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project reliable-sight-425106-c5
         sed -i "s/GCP_PROJECT/$GCP_PROJECT/g" k8s-deployment.yml
         kubectl apply -f k8s-deployment.yml
