@@ -22,20 +22,37 @@ jobs:
     - name: Setup gcloud CLI
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        project_id: ${{ secrets.GCP_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
 
+    - name: Check if GCS Bucket Exists
+      id: check_bucket
+      env:
+        GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+      run: |
+        if gsutil ls -b gs://$GCS_BUCKET_NAME > /dev/null 2>&1; then
+          echo "bucket_exists=true" >> $GITHUB_ENV
+        else
+          echo "bucket_exists=false" >> $GITHUB_ENV
+        fi
+
     - name: Create GCS Bucket
+      if: env.bucket_exists == 'false'
+      env:
+        GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+        GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
       run: |
         echo 'Creating GCS bucket...'
-        echo 'gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -c standard -l us-central1 gs://${{ secrets.GCS_BUCKET_NAME }}'
-        gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -c standard -l us-central1 gs://${{ secrets.GCS_BUCKET_NAME }}
+        gsutil mb -p $GCP_PROJECT -c standard -l us-central1 gs://$GCS_BUCKET_NAME
 
     - name: Set Bucket Permissions
+      env:
+        GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+        SERVICE_ACCOUNT_EMAIL: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
       run: |
         echo 'Setting GCS bucket permissions...'
-        gsutil iam ch serviceAccount:${{ secrets.SERVICE_ACCOUNT_EMAIL }}:roles/storage.objectViewer gs://${{ secrets.GCS_BUCKET_NAME }}
-        gsutil iam ch serviceAccount:${{ secrets.SERVICE_ACCOUNT_EMAIL }}:roles/storage.admin gs://${{ secrets.GCS_BUCKET_NAME }}
+        gsutil iam ch serviceAccount:$SERVICE_ACCOUNT_EMAIL:roles/storage.objectViewer gs://$GCS_BUCKET_NAME
+        gsutil iam ch serviceAccount:$SERVICE_ACCOUNT_EMAIL:roles/storage.admin gs://$GCS_BUCKET_NAME
 
   terraform:
     name: Set up GKE with Terraform
@@ -59,7 +76,7 @@ jobs:
     - name: Setup gcloud CLI
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        project_id: ${{ secrets.GCP_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
 
     - name: Initialize Terraform
@@ -92,7 +109,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-python-app
+        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
@@ -113,7 +130,7 @@ jobs:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - name: Get GKE credentials
-      run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT_ID }}
+      run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
 
     - name: Deploy to GKE
       run: |
