@@ -158,3 +158,8 @@ jobs:
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         gcloud container clusters get-credentials my-gke-cluster --region us-central1
         kubectl apply -f k8s-deployment.yml
+    
+    - name: Get External IP and Update Deployment
+      run: |
+        EXTERNAL_IP=$(kubectl get svc python-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        kubectl set env deployment/python-app-deployment DJANGO_ALLOWED_HOSTS=$EXTERNAL_IP
