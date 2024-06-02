@@ -112,9 +112,43 @@ jobs:
         IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
+  
+  install-istio:
+    name: Install Istio
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Authenticate with gcloud
+      uses: google-github-actions/auth@v0.4.1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Kubernetes tools
+      uses: azure/setup-kubectl@v1
+
+    - name: Authenticate to GKE
+      uses: google-github-actions/auth@v0.4.1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set environment variables and authenticate with GKE
+      run: |
+        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
+
+    - name: Install Istio
+      run: |
+        curl -L https://istio.io/downloadIstio | sh -
+        cd istio-1.*
+        istioctl install --set profile=demo -y
+        kubectl label namespace default istio-injection=enabled
 
   deploy:
-    needs: build
+    needs: [build, install-istio]
     runs-on: ubuntu-latest
 
     steps:
@@ -157,7 +191,8 @@ jobs:
         sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         gcloud container clusters get-credentials my-gke-cluster --region us-central1
-        kubectl apply -f k8s-deployment.yml
+        kubectl apply -f deployment.yml
+        kubectl apply -f istio.yml
     
     #- name: Get External IP and Update Deployment
     # run: |
