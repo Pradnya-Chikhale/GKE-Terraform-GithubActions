@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Student
 from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse
 
 
 def index(request):
@@ -38,3 +39,6 @@ def index(request):
 
     context = {"students": students, "search_query": search_query}
     return render(request, "index.html", context=context)
+
+def health_check(request):
+    return HttpResponse("OK")
