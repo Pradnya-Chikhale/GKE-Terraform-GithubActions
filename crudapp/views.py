@@ -40,5 +40,3 @@ def index(request):
     context = {"students": students, "search_query": search_query}
     return render(request, "index.html", context=context)
 
-def health_check(request):
-    return HttpResponse("OK")

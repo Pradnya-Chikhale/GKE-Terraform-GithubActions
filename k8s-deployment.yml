@@ -26,13 +26,13 @@ spec:
             cpu: "500m"
         readinessProbe:
           httpGet:
-            path: /healthz/
+            path: /
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /healthz/
+            path: /
             port: 8080
           initialDelaySeconds: 15
           periodSeconds: 20
@@ -51,19 +51,4 @@ spec:
     port: 8080
     targetPort: 8080
 
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: python-app-ingress
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: python-app-service
-            port:
-              number: 8080
+
