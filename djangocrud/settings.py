@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,13 +27,18 @@ SECRET_KEY = 'django-insecure-_k25s80g6@69t_sgka6+arg(mjzs4=jv^u*f2$4_r9(2xv7ep*
 DEBUG = True
 
 #ALLOWED_HOSTS = []
+POD_IP = os.getenv('POD_IP')
 
 ALLOWED_HOSTS = [
+    POD_IP, 
     '34.31.230.186',  # External IP of the Load Balancer
     'localhost',      # Localhost
     '127.0.0.1',      # Loopback IP
     '[::1]',          # IPv6 Loopback
-    'your-domain.com' # If you have a domain name
+    '10.4.5.3',
+    '10.4.3.5',
+    '10.4.4.4',
+    '10.4.0.11'
 ]
 
 
