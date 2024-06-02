@@ -134,6 +134,11 @@ jobs:
       uses: google-github-actions/auth@v0.4.1
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
     - name: Set environment variables and authenticate with GKE
       run: |
@@ -145,12 +150,6 @@ jobs:
         curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.15.1 sh -
         export PATH=$PWD/istio-1.15.1/bin:$PATH
         istioctl install --set profile=demo -y
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-        sudo apt update
-        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
-        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-        gcloud container clusters get-credentials my-gke-cluster --region us-central1
         kubectl label namespace default istio-injection=enabled
 
   deploy:
