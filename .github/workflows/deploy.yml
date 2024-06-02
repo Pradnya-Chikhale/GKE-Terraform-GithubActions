@@ -8,7 +8,7 @@ on:
 jobs:
   setup-bucket:
     name: Set up GCS Bucket
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -56,7 +56,7 @@ jobs:
 
   terraform:
     name: Set up GKE with Terraform
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: setup-bucket
 
     steps:
@@ -89,7 +89,7 @@ jobs:
 
   build:
     needs: terraform
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -115,7 +115,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -151,5 +151,10 @@ jobs:
       env:
            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
       run: |
-        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+        sudo apt update
+        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
+        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        gcloud container clusters get-credentials my-gke-cluster --region us-central1
         kubectl apply -f k8s-deployment.yml
