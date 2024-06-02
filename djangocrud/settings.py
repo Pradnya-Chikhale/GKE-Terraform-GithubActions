@@ -33,7 +33,7 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
 
 ALLOWED_HOSTS = [
     POD_IP, 
-    
+    '34.136.133.35',
     '34.31.230.186',  # External IP of the Load Balancer
     'localhost',      # Localhost
     '127.0.0.1',      # Loopback IP
