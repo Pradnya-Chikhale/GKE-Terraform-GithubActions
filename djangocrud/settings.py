@@ -25,7 +25,16 @@ SECRET_KEY = 'django-insecure-_k25s80g6@69t_sgka6+arg(mjzs4=jv^u*f2$4_r9(2xv7ep*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = [
+    '34.31.230.186',  # External IP of the Load Balancer
+    'localhost',      # Localhost
+    '127.0.0.1',      # Loopback IP
+    '[::1]',          # IPv6 Loopback
+    'your-domain.com' # If you have a domain name
+]
+
 
 
 # Application definition

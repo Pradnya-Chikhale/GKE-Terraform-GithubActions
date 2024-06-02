@@ -24,6 +24,9 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+        env:
+        - name: DJANGO_ALLOWED_HOSTS
+          value: "34.31.230.186,localhost,127.0.0.1,[::1],your-domain.com"
         readinessProbe:
           httpGet:
             path: /
@@ -36,6 +39,7 @@ spec:
             port: 8080
           initialDelaySeconds: 15
           periodSeconds: 20
+
 
 ---
 apiVersion: v1
