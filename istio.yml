@@ -26,6 +26,8 @@ spec:
   - match:
     - uri:
         prefix: "/stable"
+    rewrite:
+      uri: "/"
     route:
     - destination:
         host: python-app-service
@@ -33,6 +35,8 @@ spec:
   - match:
     - uri:
         prefix: "/canary"
+    rewrite:
+      uri: "/"
     route:
     - destination:
         host: python-app-service
