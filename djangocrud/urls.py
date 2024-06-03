@@ -19,7 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('stable/', include('crudapp.urls')),
-    path('canary/', include('crudapp.urls')),
     path("", include("crudapp.urls")),
 ]
