@@ -193,14 +193,24 @@ jobs:
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+    - name: Get GKE credentials
+      run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
+
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+        sudo apt update
+        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
+        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        gcloud container clusters get-credentials my-gke-cluster --region us-central1
+
     - name: Set environment variables and authenticate with GKE
       run: |
         
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project reliable-sight-425106-c5
 
-    - name: Get GKE credentials
-      run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
 
     - name: Create Docker registry secret
       run: |
@@ -209,7 +219,8 @@ jobs:
         --docker-server=https://gcr.io \
         --docker-username=_json_key \
         --docker-password="$(cat keyfile.json)" \
-        --docker-email=your-email@example.com
+        --docker-email="gke-deployment@reliable-sight-425106-c5.iam.gserviceaccount.com"
+
     - name: Deploy to GKE
       env:
            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
