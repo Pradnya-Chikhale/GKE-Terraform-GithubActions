@@ -143,7 +143,7 @@ jobs:
       uses: azure/setup-kubectl@v1
 
     - name: Authenticate to GKE
-      uses: google-github-actions/auth@v0.4.1
+      uses: google-github-actions/auth@v0.4.1 
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
     
