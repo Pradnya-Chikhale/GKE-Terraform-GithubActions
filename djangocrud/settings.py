@@ -34,6 +34,7 @@ POD_IP = os.getenv('POD_IP')
 ALLOWED_HOSTS = [
     POD_IP, 
     '34.136.133.35',
+    '34.30.60.251',
     'localhost',      # Localhost
     '127.0.0.1',      # Loopback IP
     '[::1]',          # IPv6 Loopback
