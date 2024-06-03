@@ -107,11 +107,23 @@ jobs:
       run: |
         gcloud --quiet auth configure-docker
 
-    - name: Build and push Docker image
+    - name: Build and push Docker image (stable)
       run: |
-        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app
+        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app:stable
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
+
+    - name: Build and push Docker image (canary)
+      run: |
+        IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app:canary
+        docker build -t $IMAGE_NAME .
+        docker push $IMAGE_NAME
+
+    #- name: Build and push Docker image
+    #  run: |
+    #    IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT }}/my-python-app
+    #    docker build -t $IMAGE_NAME .
+    #    docker push $IMAGE_NAME
   
   install-istio:
     name: Install Istio
@@ -190,6 +202,14 @@ jobs:
     - name: Get GKE credentials
       run: gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project ${{ secrets.GCP_PROJECT }}
 
+    - name: Create Docker registry secret
+      run: |
+        echo ${{ secrets.GCP_SA_KEY }} > keyfile.json
+        kubectl create secret docker-registry gcr-json-key \
+        --docker-server=https://gcr.io \
+        --docker-username=_json_key \
+        --docker-password="$(cat keyfile.json)" \
+        --docker-email=your-email@example.com
     - name: Deploy to GKE
       env:
            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
