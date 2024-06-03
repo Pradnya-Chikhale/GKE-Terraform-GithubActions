@@ -15,8 +15,7 @@ spec:
         version: stable
 
     spec:
-      imagePullSecrets:
-      - name: gcr-json-key
+      
       containers:
       - name: python-app
         image: gcr.io/reliable-sight-425106-c5/my-python-app:stable
@@ -65,8 +64,7 @@ spec:
         app: python-app
         version: canary
     spec:
-      imagePullSecrets:
-      - name: gcr-json-key
+      
       containers:
       - name: python-app
         image: gcr.io/reliable-sight-425106-c5/my-python-app:canary
