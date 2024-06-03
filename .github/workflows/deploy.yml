@@ -211,6 +211,17 @@ jobs:
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         gcloud container clusters get-credentials my-gke-cluster --region us-central1 --project reliable-sight-425106-c5
 
+    - name: Create Docker Registry Secret
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+      run: |
+        echo ${{ secrets.GCP_SA_KEY }} > keyfile.json
+        kubectl create secret docker-registry gcr-json-key \
+          --docker-server=https://gcr.io \
+          --docker-username=_json_key \
+          --docker-password="$(cat keyfile.json)" \
+          --docker-email=gke-deployment@reliable-sight-425106-c5.iam.gserviceaccount.com
+    
     - name: Deploy to GKE
       env:
            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
