@@ -222,7 +222,8 @@ jobs:
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         gcloud container clusters get-credentials my-gke-cluster --region us-central1
         kubectl apply -f k8s-deployment.yml
-        #kubectl apply -f istio.yml
+        
+      #kubectl apply -f istio.yml
     
     #- name: Get External IP and Update Deployment
     # run: |
